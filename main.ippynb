@@ -1,0 +1,10 @@
+import yfinance as yf
+import pandas as pd
+
+msft = yf.Ticker("MSFT")
+
+stock_info = msft.info
+
+stock_df = pd.DataFrame(stock_info)
+
+print(stock_df)

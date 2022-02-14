@@ -1,0 +1,61 @@
+Data:
+
+Stock Descriptive Information:
+-Ticker
+-Name
+-Long Business Summary
+-Website
+-Country
+-Sector
+-Industry
+
+News
+-News
+
+Stock Metrics Summary 
+-Current Price
+-previous price
+-Daily Change
+-52 week change
+-Volume
+-Average Volume
+-Beta
+-last dividend
+-yield
+
+Analyst Earnings Summary
+- Target Mean Price
+- Number of Analyst Opinions
+- Next Earnings Date
+
+
+Ownership Summary
+-Held by Institutions
+-Held by Insiders
+
+Background Calculation Metrics
+- Shares Outstanding
+
+Quant
+- Target Mean Price
+- Number of Analyst Opinions
+-Revenue P Share
+-Enterprise to Revenue
+
+-forward eps
+-forward pe
+-price to book
+
+
+
+
+Ratios
+-Debt to Equity
+-Return on Equity
+-Quick ratio
+-shortPercentOfFloat 	
+
+
+-average volume
+-volume
+
