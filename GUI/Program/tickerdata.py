@@ -49,13 +49,13 @@ class TickerData():
         return(ticker_hist_3mo_df)  
     #Function that gets price history for a 1 Year period     
     def history1Year(self):
-        ticker_hist_1yr_df = self.ticker.history(period="1yr")
+        ticker_hist_1yr_df = self.ticker.history(period="1y")
         #Resets the index of the DataFrame so that the Date can be properly selected
         ticker_hist_1yr_df = ticker_hist_1yr_df.reset_index()
         return(ticker_hist_1yr_df)
         #Function that gets price history for a 3 Year period     
     def history3Year(self):
-        ticker_hist_3yr_df = self.ticker.history(period="3yr")
+        ticker_hist_3yr_df = self.ticker.history(period="3y")
         #Resets the index of the DataFrame so that the Date can be properly selected
         ticker_hist_3yr_df = ticker_hist_3yr_df.reset_index()
         return(ticker_hist_3yr_df)    

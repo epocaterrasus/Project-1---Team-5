@@ -9,12 +9,18 @@ from IPython.display import display
 from bokeh.models.formatters import DatetimeTickFormatter
 from xlwings import view
 from datetime import timedelta
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-ticker_data = TickerData("FB")
 #print(ticker_data.getInfo())
 
 #Function that creates a table with summary information about the stock/ticker
-def stockInfo():
+
+
+
+
+
+def stockInfo(ticker_data):
+    
     #Pulls in the symbol using the getInfo function
     stock_ticker = ticker_data.getInfo()[0]["symbol"]
     #Pulls in the short name for the company using the getInfo function
@@ -27,18 +33,17 @@ def stockInfo():
     stock_information_dic = {"Ticker" : stock_ticker, "Name" : stock_name, "Sector" : stock_sector, "Industry" : stock_industry}
     #Creates a DataFrame from the previously mentioned dictionary with no index (for aestethics)
     stock_information_df = pd.DataFrame(data=stock_information_dic, index=[""])
-    #rotates the Axis of our DataFrame
-    stock_information_df = stock_information_df.T
+    stock_information_df.style.set_properties(subset=[""], **{'width': '300px'})
     return(stock_information_df)
 
 #Function that pulls the business summary for the stock/ticker
-def stockSummary():
+def stockSummary(ticker_data):
     #Pulls in the Long Business Summary using the getInfo function
     stock_description = ticker_data.getInfo()[0]["longBusinessSummary"]
     return stock_description
 
 #Function that creates a table with price and % change information
-def pricingInfo():
+def pricingInfo(ticker_data):
     #Pulls in the Current Stock Price rounds it
     stock_curr_price = round((ticker_data.getInfo()[0]["regularMarketPrice"]),2)
     #Pulls in the Yesterday's Stock Price and rounds it
@@ -53,12 +58,10 @@ def pricingInfo():
     stock_price_dic = {"Current Price ($)" : stock_curr_price, "Yesteday Closing Price ($)" : stock_ystdy_price, "Fifty Day Average Price ($)" : stock_50dyavg_price, "Change since Yesterday ($)" : change_since_ystdy, "Change since Yesterday (%)": pct_change_since_ystdy}
     #creates a DataFrame using our dictionary and desired columns and no index (for aesthethics)
     stock_price_df = pd.DataFrame(data=stock_price_dic, index=[""])
-    #rotates the Axis of our DataFrame
-    stock_price_df = stock_price_df.T
     return(stock_price_df)
 
 #Function that creates a table that summarizes analysts pricing opinions for the stock
-def analystSummary():
+def analystSummary(ticker_data):
     stock_current_price = ticker_data.getInfo()[0]["regularMarketPrice"]
     #pulls in the Number of Analysts Ratings/Opinions 
     number_of_analysts = ticker_data.getInfo()[0]["numberOfAnalystOpinions"]
@@ -75,11 +78,11 @@ def analystSummary():
     #creates a DataFrame using our dictionary and desired columns and no index (for aesthethics)
     stock_analysts_df = pd.DataFrame(data=stock_analysts_dic, index=[""])
     #rotates the Axis of our DataFrame
-    stock_analysts_df = stock_analysts_df.T
+    stock_analysts_df = stock_analysts_df
     return stock_analysts_df
 
 #Function that creates a table with the stocks price evolution
-def stockpriceEvolution():
+def stockpriceEvolution(ticker_data):
     stock_current_price = ticker_data.getInfo()[0]["regularMarketPrice"]
     stock_ystdy_price = round((ticker_data.getInfo()[0]["regularMarketPreviousClose"]),2)
     change_since_ystdy = round(((stock_current_price - stock_ystdy_price) / stock_current_price),2)
@@ -125,4 +128,27 @@ def stockpriceEvolution():
     print(stock_evolution_df)
     return stock_evolution_df
 
-stockpriceEvolution()
+#Function that creates a table with Common Ratios
+def getCommonRatios(ticker_data):
+    ratios ={
+   "Trailing PE": round(ticker_data.getInfo()[0]["trailingPE"],2),
+    "Forward PE": round(ticker_data.getInfo()[0]["forwardPE"],2),
+    "Trailing EPS": round(ticker_data.getInfo()[0]["trailingEps"],2), 
+    "Forward EPS": round(ticker_data.getInfo()[0]["forwardEps"],2),
+    "Return On Equity": round(ticker_data.getInfo()[0]["returnOnEquity"],2),
+    "TEV/Sales": round(ticker_data.getInfo()[0]["enterpriseValue"]/ticker_data.getInfo()[0]["totalRevenue"],2),
+    "TEV/EBITDA": round(ticker_data.getInfo()[0]["enterpriseValue"]/ticker_data.getInfo()[0]["ebitda"],2),
+    "Total Debt/Equity": round(ticker_data.getInfo()[0]["debtToEquity"],2),
+    "Total Debt/EBITDA": round(ticker_data.getInfo()[0]["totalDebt"]/ticker_data.getInfo()[0]["ebitda"],2),
+    "Total Debt/TEV": round(ticker_data.getInfo()[0]["totalDebt"]/ticker_data.getInfo()[0]["enterpriseValue"],2),
+    "Price to Book": round(ticker_data.getInfo()[0]["priceToBook"],2) 
+    }
+    #Creates a DataFrame using our dictionary and desired columns and no index (for aesthethics)  
+    common_ratios_df = pd.DataFrame(data=ratios, index=[""])
+    #Rotates the Axis of our DataFrame
+    common_ratios_df = common_ratios_df
+    return(common_ratios_df)
+
+#def plot
+
+

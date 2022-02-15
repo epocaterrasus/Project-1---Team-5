@@ -189,9 +189,6 @@ class Ui_Form(object):
         self.labelCompanyName = QtWidgets.QLabel(Form)
         self.labelCompanyName.setGeometry(QtCore.QRect(200, 200, 151, 71))
         self.labelCompanyName.setObjectName("labelCompanyName")
-        self.tableView = QtWidgets.QTableView(Form)
-        self.tableView.setGeometry(QtCore.QRect(180, 340, 831, 471))
-        self.tableView.setObjectName("tableView")
 
         self.retranslateUi(Form)
         self.pushButton.clicked.connect(self.labelCompanyName.update) # type: ignore

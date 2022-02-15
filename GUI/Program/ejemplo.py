@@ -9,9 +9,133 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from functions import *
+from PyQt5.QtCore import QAbstractTableModel, Qt
+from tickerdata import *
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+class QtTable(QAbstractTableModel):
+    def __init__(self, data):
+        QAbstractTableModel.__init__(self)
+        self._data = data
+
+    def rowCount(self, parent=None):
+        return self._data.shape[0]
+
+    def columnCount(self, parent=None):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return str(self._data.iloc[index.row(), index.column()])
+        return None
+
+    def headerData(self, col, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self._data.columns[col]
+        return None
+class DataFrameModel(QtCore.QAbstractTableModel):
+    DtypeRole = QtCore.Qt.UserRole + 1000
+    ValueRole = QtCore.Qt.UserRole + 1001
+
+    def __init__(self, df=pd.DataFrame(), parent=None):
+        super(DataFrameModel, self).__init__(parent)
+        self._dataframe = df
+
+    def setDataFrame(self, dataframe):
+        self.beginResetModel()
+        self._dataframe = dataframe.copy()
+        self.endResetModel()
+
+    def dataFrame(self):
+        return self._dataframe
+
+    dataFrame = QtCore.pyqtProperty(pd.DataFrame, fget=dataFrame, fset=setDataFrame)
+
+    @QtCore.pyqtSlot(int, QtCore.Qt.Orientation, result=str)
+    def headerData(self, section: int, orientation: QtCore.Qt.Orientation, role: int = QtCore.Qt.DisplayRole):
+        if role == QtCore.Qt.DisplayRole:
+            if orientation == QtCore.Qt.Horizontal:
+                return self._dataframe.columns[section]
+            else:
+                return str(self._dataframe.index[section])
+        return QtCore.QVariant()
+
+    def rowCount(self, parent=QtCore.QModelIndex()):
+        if parent.isValid():
+            return 0
+        return len(self._dataframe.index)
+
+    def columnCount(self, parent=QtCore.QModelIndex()):
+        if parent.isValid():
+            return 0
+        return self._dataframe.columns.size
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if not index.isValid() or not (0 <= index.row() < self.rowCount() \
+            and 0 <= index.column() < self.columnCount()):
+            return QtCore.QVariant()
+        row = self._dataframe.index[index.row()]
+        col = self._dataframe.columns[index.column()]
+        dt = self._dataframe[col].dtype
+
+        val = self._dataframe.iloc[row][col]
+        if role == QtCore.Qt.DisplayRole:
+            return str(val)
+        elif role == DataFrameModel.ValueRole:
+            return val
+        if role == DataFrameModel.DtypeRole:
+            return dt
+        return QtCore.QVariant()
+
+    def roleNames(self):
+        roles = {
+            QtCore.Qt.DisplayRole: b'display',
+            DataFrameModel.DtypeRole: b'dtype',
+            DataFrameModel.ValueRole: b'value'
+        }
+        return roles
 
 
 class Ui_Form(object):
+    def onClickButton(self):
+        #print(self.lineEdit.text())
+        ticker_data = TickerData(self.lineEdit.text())
+        #Stock Info
+        modelPyQt = QtTable(stockInfo(ticker_data))
+        self.stockInfo.setModel(modelPyQt)
+        self.stockInfo.setWindowTitle('Company data')
+        self.stockInfo.resizeColumnsToContents()
+        # stock Summary
+        self.stockSummary.setText(stockSummary(ticker_data))
+        # Pricing Info
+        modelPricingInfo = QtTable(pricingInfo(ticker_data))
+        self.pricingInfo.setModel(modelPricingInfo)
+        self.pricingInfo.setWindowTitle('Company pricing info')
+        self.pricingInfo.resizeColumnsToContents()
+        #  analyst Summary
+        modelAnalystSummary = QtTable(analystSummary(ticker_data))
+        self.analystSummary.setModel(modelAnalystSummary)
+        self.analystSummary.setWindowTitle('Company Analyst summary')
+        self.analystSummary.resizeColumnsToContents()
+        # Stock price evolution
+        modelStockPriceEvolution = QtTable(stockpriceEvolution(ticker_data))
+        self.stockpriceEvolution.setModel(modelStockPriceEvolution)
+        self.stockpriceEvolution.setWindowTitle('Company Stock Price evolution')
+        self.stockpriceEvolution.resizeColumnsToContents()
+        # Common ratios
+        modelCommonRatios = QtTable(getCommonRatios(ticker_data))
+        self.getCommonRatios.setModel(modelCommonRatios)
+        self.getCommonRatios.setWindowTitle('Company Stock Price evolution')
+        self.getCommonRatios.resizeColumnsToContents()
+        # News
+        modelNews = QtTable( ticker_data.getNews())
+        self.news.setModel(modelNews)
+        self.news.setWindowTitle('Company news')
+        self.news.resizeColumnsToContents()
+       
+        #self.labelCompanyName.setText(self.lineEdit.text())
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1330, 900)
@@ -184,22 +308,91 @@ class Ui_Form(object):
         self.pushButton.setAutoFillBackground(True)
         self.pushButton.setObjectName("pushButton")
         self.label_3 = QtWidgets.QLabel(Form)
-        self.label_3.setGeometry(QtCore.QRect(1100, 10, 201, 31))
+        self.label_3.setGeometry(QtCore.QRect(1100, 30, 201, 31))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setWordWrap(True)
         self.label_3.setObjectName("label_3")
-        self.labelCompanyName = QtWidgets.QLabel(Form)
-        self.labelCompanyName.setGeometry(QtCore.QRect(200, 200, 151, 71))
-        self.labelCompanyName.setObjectName("labelCompanyName")
-        self.tableView = QtWidgets.QTableView(Form)
-        self.tableView.setGeometry(QtCore.QRect(180, 340, 831, 471))
-        self.tableView.setObjectName("tableView")
+        self.label = QtWidgets.QLabel(Form)
+        self.label.setGeometry(QtCore.QRect(420, 30, 311, 31))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_4 = QtWidgets.QLabel(Form)
+        self.label_4.setGeometry(QtCore.QRect(470, 70, 181, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.label_5 = QtWidgets.QLabel(Form)
+        self.label_5.setGeometry(QtCore.QRect(1100, 80, 201, 31))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_5.setFont(font)
+        self.label_5.setObjectName("label_5")
+        self.label_6 = QtWidgets.QLabel(Form)
+        self.label_6.setGeometry(QtCore.QRect(1150, 0, 91, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_6.setFont(font)
+        self.label_6.setObjectName("label_6")
+        self.tabWidget = QtWidgets.QTabWidget(Form)
+        self.tabWidget.setGeometry(QtCore.QRect(10, 140, 1301, 741))
+        self.tabWidget.setObjectName("tabWidget")
+        self.tabStockInfo = QtWidgets.QWidget()
+        self.tabStockInfo.setObjectName("tabStockInfo")
+        self.stockpriceEvolution = QtWidgets.QTableView(self.tabStockInfo)
+        self.stockpriceEvolution.setGeometry(QtCore.QRect(0, 600, 500, 110))
+        self.stockpriceEvolution.setObjectName("stockpriceEvolution")
+        self.stockInfo = QtWidgets.QTableView(self.tabStockInfo)
+        self.stockInfo.setGeometry(QtCore.QRect(0, 40, 500, 80))
+        self.stockInfo.setObjectName("stockInfo")
+        self.stockInfo.horizontalHeader().setStretchLastSection(True)
+        self.stockInfo.verticalHeader().setDefaultSectionSize(50)
+        self.analystSummary = QtWidgets.QTableView(self.tabStockInfo)
+        self.analystSummary.setGeometry(QtCore.QRect(0, 410, 931, 71))
+        self.analystSummary.setObjectName("analystSummary")
+        self.pricingInfo = QtWidgets.QTableView(self.tabStockInfo)
+        self.pricingInfo.setGeometry(QtCore.QRect(0, 510, 725, 60))
+        self.pricingInfo.setObjectName("pricingInfo")
+        self.getCommonRatios = QtWidgets.QTableView(self.tabStockInfo)
+        self.getCommonRatios.setGeometry(QtCore.QRect(0, 330, 930, 60))
+        self.getCommonRatios.setObjectName("getCommonRatios")
+        self.stockSummary = QtWidgets.QTextBrowser(self.tabStockInfo)
+        self.stockSummary.setGeometry(QtCore.QRect(510, 40, 771, 81))
+        self.stockSummary.setObjectName("stockSummary")
+        self.news = QtWidgets.QTableView(self.tabStockInfo)
+        self.news.setGeometry(QtCore.QRect(0, 150, 1281, 161))
+        self.news.setObjectName("news")
+        self.tabWidget.addTab(self.tabStockInfo, "")
+        self.tabGraphs = QtWidgets.QWidget()
+        self.tabGraphs.setObjectName("tabGraphs")
+        self.tabWidget.addTab(self.tabGraphs, "")
 
         self.retranslateUi(Form)
-        self.pushButton.clicked.connect(self.labelCompanyName.update) # type: ignore
+        self.tabWidget.setCurrentIndex(0)
+        self.pushButton.clicked.connect(self.onClickButton) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.pushButton.setText(_translate("Form", "RUN"))
-        self.label_3.setText(_translate("Form", "1. Please enter your desired stock Ticker                                                         "))
-        self.labelCompanyName.setText(_translate("Form", "TextLabel"))
+        self.label_3.setText(_translate("Form", "1. Please enter your desired stock Ticker in the Box                                                     "))
+        self.label.setText(_translate("Form", "STONKS ANALYZER V.1"))
+        self.label_4.setText(_translate("Form", "a Blumberg Inc. Production"))
+        self.label_5.setText(_translate("Form", "2. Hit Run"))
+        self.label_6.setText(_translate("Form", "Instructions"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabStockInfo), _translate("Form", "Stock Information"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabGraphs), _translate("Form", "Graphs"))
+
