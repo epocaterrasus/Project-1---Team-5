@@ -32,6 +32,7 @@ class TickerData():
     #Function that gets price history for a one week period
     def history1Week(self):
         ticker_hist_1wk_df = self.ticker.history(period="1wk")
+        
         #Resets the index of the DataFrame so that the Date can be properly selected
         ticker_hist_1wk_df = ticker_hist_1wk_df.reset_index()
         return(ticker_hist_1wk_df)
@@ -172,4 +173,6 @@ if __name__=="__main__":
     ticker_data = TickerData("FB")
     ticku =  (ticker_data.getInfo())
     print(ticku[0]["dayHigh"])
+    print(ticker_data.history1Week().Date.tolist()[0].strftime("%m/%d/%Y"))
+
     #print((ticker_data.getInfo()))

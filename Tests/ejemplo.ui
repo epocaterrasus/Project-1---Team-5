@@ -619,7 +619,7 @@
      <x>10</x>
      <y>140</y>
      <width>1301</width>
-     <height>741</height>
+     <height>751</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -633,7 +633,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>600</y>
+       <y>610</y>
        <width>500</width>
        <height>110</height>
       </rect>
@@ -659,7 +659,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>410</y>
+       <y>440</y>
        <width>931</width>
        <height>71</height>
       </rect>
@@ -669,7 +669,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>510</y>
+       <y>530</y>
        <width>725</width>
        <height>60</height>
       </rect>
@@ -679,7 +679,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>330</y>
+       <y>350</y>
        <width>930</width>
        <height>60</height>
       </rect>
@@ -699,10 +699,150 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>160</y>
        <width>1281</width>
        <height>161</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyInfo">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>10</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Information</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanySummary">
+     <property name="geometry">
+      <rect>
+       <x>670</x>
+       <y>10</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Summary</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyNews">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>130</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company News</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyRatios">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>320</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Ratios</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyForecasts">
+     <property name="geometry">
+      <rect>
+       <x>420</x>
+       <y>410</y>
+       <width>161</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Forecasts</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyPriceMovement">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>510</y>
+       <width>221</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Price Movement</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CompanyPriceHistoricals">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>590</y>
+       <width>221</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Company Price Historicals</string>
      </property>
     </widget>
    </widget>
@@ -710,6 +850,156 @@
     <attribute name="title">
      <string>Graphs</string>
     </attribute>
+    <widget class="QGraphicsView" name="Graph1WeekClose">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>401</width>
+       <height>271</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="Graph1MonthClose">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>40</y>
+       <width>401</width>
+       <height>271</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="Graph3MonthClose">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>40</y>
+       <width>401</width>
+       <height>271</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="Graph1YearClose">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>360</y>
+       <width>401</width>
+       <height>271</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="Graph3YearClose">
+     <property name="geometry">
+      <rect>
+       <x>610</x>
+       <y>360</y>
+       <width>401</width>
+       <height>271</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Graph1Week">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>10</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Closing Prices 1 Week</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Graph1Month">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>10</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Closing Prices 1 Months</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Graph3Month">
+     <property name="geometry">
+      <rect>
+       <x>960</x>
+       <y>10</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Closing Prices 3 Months</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Graph1Year">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>330</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Closing Prices 1 Year</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Graph3Year">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>330</y>
+       <width>191</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Closing Prices 3 Year</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

@@ -1,8 +1,8 @@
 import sys
-from ejemplo import*
+from interface import*
 from PyQt5.QtWidgets import QApplication,QWidget
 
-class MiFormulario(QtWidgets.QWidget):
+class AppRun(QtWidgets.QWidget):
     def __init__(self,parent=None):
         QtWidgets.QWidget.__init__(self,parent)
         self.ui = Ui_Form()
@@ -12,7 +12,7 @@ class MiFormulario(QtWidgets.QWidget):
        
 if __name__=="__main__":
     aplicacion = QtWidgets.QApplication(sys.argv)
-    mi_app = MiFormulario()
-    mi_app.show()
+    interface = AppRun()
+    interface.show()
 
     sys.exit(aplicacion.exec_())
