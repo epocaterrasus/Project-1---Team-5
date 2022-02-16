@@ -9,150 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from functions import *
-from PyQt5.QtCore import QAbstractTableModel, Qt
-from tickerdata import *
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
-class QtTable(QAbstractTableModel):
-    def __init__(self, data):
-        QAbstractTableModel.__init__(self)
-        self._data = data
-
-    def rowCount(self, parent=None):
-        return self._data.shape[0]
-
-    def columnCount(self, parent=None):
-        return self._data.shape[1]
-
-    def data(self, index, role=Qt.DisplayRole):
-        if index.isValid():
-            if role == Qt.DisplayRole:
-                return str(self._data.iloc[index.row(), index.column()])
-        return None
-
-    def headerData(self, col, orientation, role):
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-            return self._data.columns[col]
-        return None
-class DataFrameModel(QtCore.QAbstractTableModel):
-    DtypeRole = QtCore.Qt.UserRole + 1000
-    ValueRole = QtCore.Qt.UserRole + 1001
-
-    def __init__(self, df=pd.DataFrame(), parent=None):
-        super(DataFrameModel, self).__init__(parent)
-        self._dataframe = df
-
-    def setDataFrame(self, dataframe):
-        self.beginResetModel()
-        self._dataframe = dataframe.copy()
-        self.endResetModel()
-
-    def dataFrame(self):
-        return self._dataframe
-
-    dataFrame = QtCore.pyqtProperty(pd.DataFrame, fget=dataFrame, fset=setDataFrame)
-
-    @QtCore.pyqtSlot(int, QtCore.Qt.Orientation, result=str)
-    def headerData(self, section: int, orientation: QtCore.Qt.Orientation, role: int = QtCore.Qt.DisplayRole):
-        if role == QtCore.Qt.DisplayRole:
-            if orientation == QtCore.Qt.Horizontal:
-                return self._dataframe.columns[section]
-            else:
-                return str(self._dataframe.index[section])
-        return QtCore.QVariant()
-
-    def rowCount(self, parent=QtCore.QModelIndex()):
-        if parent.isValid():
-            return 0
-        return len(self._dataframe.index)
-
-    def columnCount(self, parent=QtCore.QModelIndex()):
-        if parent.isValid():
-            return 0
-        return self._dataframe.columns.size
-
-    def data(self, index, role=QtCore.Qt.DisplayRole):
-        if not index.isValid() or not (0 <= index.row() < self.rowCount() \
-            and 0 <= index.column() < self.columnCount()):
-            return QtCore.QVariant()
-        row = self._dataframe.index[index.row()]
-        col = self._dataframe.columns[index.column()]
-        dt = self._dataframe[col].dtype
-
-        val = self._dataframe.iloc[row][col]
-        if role == QtCore.Qt.DisplayRole:
-            return str(val)
-        elif role == DataFrameModel.ValueRole:
-            return val
-        if role == DataFrameModel.DtypeRole:
-            return dt
-        return QtCore.QVariant()
-
-    def roleNames(self):
-        roles = {
-            QtCore.Qt.DisplayRole: b'display',
-            DataFrameModel.DtypeRole: b'dtype',
-            DataFrameModel.ValueRole: b'value'
-        }
-        return roles
 
 
 class Ui_Form(object):
-    def onClickButton(self):
-        #print(self.lineEdit.text())
-        ticker_data = TickerData(self.lineEdit.text())
-        #Stock Info
-        modelPyQt = QtTable(stockInfo(ticker_data))
-        self.stockInfo.setModel(modelPyQt)
-        self.stockInfo.setWindowTitle('Company data')
-        self.stockInfo.resizeColumnsToContents()
-        # stock Summary
-        self.stockSummary.setText(stockSummary(ticker_data))
-        # Pricing Info
-        modelPricingInfo = QtTable(pricingInfo(ticker_data))
-        self.pricingInfo.setModel(modelPricingInfo)
-        self.pricingInfo.setWindowTitle('Company pricing info')
-        self.pricingInfo.resizeColumnsToContents()
-        #  analyst Summary
-        modelAnalystSummary = QtTable(analystSummary(ticker_data))
-        self.analystSummary.setModel(modelAnalystSummary)
-        self.analystSummary.setWindowTitle('Company Analyst summary')
-        self.analystSummary.resizeColumnsToContents()
-        # Stock price evolution
-        modelStockPriceEvolution = QtTable(stockpriceEvolution(ticker_data))
-        self.stockpriceEvolution.setModel(modelStockPriceEvolution)
-        self.stockpriceEvolution.setWindowTitle('Company Stock Price evolution')
-        self.stockpriceEvolution.resizeColumnsToContents()
-        # Common ratios
-        modelCommonRatios = QtTable(getCommonRatios(ticker_data))
-        self.getCommonRatios.setModel(modelCommonRatios)
-        self.getCommonRatios.setWindowTitle('Company Stock Price evolution')
-        self.getCommonRatios.resizeColumnsToContents()
-        # News
-        modelNews = QtTable( ticker_data.getNews())
-        self.news.setModel(modelNews)
-        self.news.setWindowTitle('Company news')
-        self.news.resizeColumnsToContents()
-        #Graph for one week
-        dataOneWeek = ticker_data.history1Week()
-        self.Graph1WeekClose.plot(dataOneWeek.Close.tolist())
-        #Graph for one month
-        dataOneMonth = ticker_data.history1Month()
-        self.Graph1MonthClose.plot(dataOneMonth.Close.tolist())
-        #Graph for three month
-        dataThreeMonth = ticker_data.history3Month()
-        self.Graph3MonthClose.plot(dataThreeMonth.Close.tolist())
-        #Graph for One year
-        dateOneYear = ticker_data.history1Year()
-        self.Graph1YearClose.plot(dateOneYear.Close.tolist())
-        #Graph for three year
-        dateThreeYear = ticker_data.history3Year()
-        self.Graph3YearClose.plot(dateThreeYear.Close.tolist())
-        #axis = dataTest.Date.tolist()
-        #xdict = {0:'a', 1:'b', 2:'c', 3:'d', 4:'e', 5:'f'}
-        #self.graphicsView.plot.setAxisItems({'bottom':axis})
-        #self.labelCompanyName.setText(self.lineEdit.text())
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1330, 900)
@@ -450,19 +309,19 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tabStockInfo, "")
         self.tabGraphs = QtWidgets.QWidget()
         self.tabGraphs.setObjectName("tabGraphs")
-        self.Graph1WeekClose =pg.PlotWidget(self.tabGraphs)
+        self.Graph1WeekClose = QtWidgets.QGraphicsView(self.tabGraphs)
         self.Graph1WeekClose.setGeometry(QtCore.QRect(10, 40, 401, 271))
         self.Graph1WeekClose.setObjectName("Graph1WeekClose")
-        self.Graph1MonthClose = pg.PlotWidget(self.tabGraphs)
+        self.Graph1MonthClose = QtWidgets.QGraphicsView(self.tabGraphs)
         self.Graph1MonthClose.setGeometry(QtCore.QRect(430, 40, 401, 271))
         self.Graph1MonthClose.setObjectName("Graph1MonthClose")
-        self.Graph3MonthClose =pg.PlotWidget(self.tabGraphs)
+        self.Graph3MonthClose = QtWidgets.QGraphicsView(self.tabGraphs)
         self.Graph3MonthClose.setGeometry(QtCore.QRect(850, 40, 401, 271))
         self.Graph3MonthClose.setObjectName("Graph3MonthClose")
-        self.Graph1YearClose = pg.PlotWidget(self.tabGraphs)
+        self.Graph1YearClose = QtWidgets.QGraphicsView(self.tabGraphs)
         self.Graph1YearClose.setGeometry(QtCore.QRect(190, 360, 401, 271))
         self.Graph1YearClose.setObjectName("Graph1YearClose")
-        self.Graph3YearClose = pg.PlotWidget(self.tabGraphs)
+        self.Graph3YearClose = QtWidgets.QGraphicsView(self.tabGraphs)
         self.Graph3YearClose.setGeometry(QtCore.QRect(610, 360, 401, 271))
         self.Graph3YearClose.setObjectName("Graph3YearClose")
         self.Graph1Week = QtWidgets.QLabel(self.tabGraphs)
@@ -509,7 +368,6 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(0)
-        self.pushButton.clicked.connect(self.onClickButton) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
