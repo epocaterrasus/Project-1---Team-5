@@ -1,10 +1,9 @@
+#This sheet of code contains all the different DataCalls from the Yahoo Finance API which are then used by our other functions which create the DataFrames and visualizations for the information we chose to display
+
 #Imports the necessary libraries
-#from typing_extensions import Self
 import yfinance as yf
 import pandas as pd
-import json
 import datetime
-from IPython.display import display
 from bokeh.models.formatters import DatetimeTickFormatter
 from xlwings import view
 
@@ -168,11 +167,6 @@ class TickerData():
 
 
 
-
+#Main function that runs the code by pulling in a ticker, in this example FB, but with our interface this ticker becomes changeable to any ticker desired by the user
 if __name__=="__main__":
     ticker_data = TickerData("FB")
-    ticku =  (ticker_data.getInfo())
-    print(ticku[0]["dayHigh"])
-    print(ticker_data.history1Week().Date.tolist()[0].strftime("%m/%d/%Y"))
-
-    #print((ticker_data.getInfo()))
