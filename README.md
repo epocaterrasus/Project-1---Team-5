@@ -92,8 +92,11 @@ Being in the folder created when you downloaded the repository type ```python ma
 ## Contributors
 
 Edgar Pocaterra - epocaterra@protonmail.ch / +1 806 283 5455
-Nico Cortese
+
+Nico Cortese - nicolasacortese@gmail.com / +1 315 868 8027
+
 Donika Berisha
+
 Jerry Ross
 
 ---
